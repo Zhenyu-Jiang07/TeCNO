@@ -75,6 +75,8 @@ def run(c,stage,resume=True,smoke=False,max_epochs=None):
     if stats_snapshot.exists():
         assert json.loads(stats_snapshot.read_text())==stats,'Training statistics changed in an existing run'
     atomic_json(stats_snapshot,stats)
+    inputs_snapshot=Path(c['processed_root'])/'training_statistics.inputs.json'
+    if inputs_snapshot.exists():shutil.copy2(inputs_snapshot,out/inputs_snapshot.name)
     if stage=='cnn':
         train=FrameDataset(c,'train',augment=True,limit=32 if smoke else None)
         val=FrameDataset(c,'val',limit=32 if smoke else None)

@@ -150,6 +150,15 @@ def make_video(c, video):
 def normalization(c):
     from .common import phase_weights
     processed = Path(c['processed_root'])
+    stats_path=processed/'training_statistics.json'
+    inputs_path=processed/'training_statistics.inputs.json'
+    signature={'train_videos':ids(c,'train'),'input_size':c['input_size'],
+               'storage_size':c['storage_size'],'fps':c['fps'],
+               'method':'RGB_224_resize_linear_train_1hz_mean_std_v1',
+               'manifests':{str(v):digest(processed/'manifests'/f'video{v:02d}.csv') for v in ids(c,'train')}}
+    if stats_path.exists() and inputs_path.exists():
+        assert json.loads(inputs_path.read_text())==signature, 'Training manifests changed; use a new processed/run directory'
+        return json.loads(stats_path.read_text())
     frames = pd.concat([pd.read_csv(processed/'manifests'/f'video{v:02d}.csv') for v in ids(c,'train')],ignore_index=True)
     weights = phase_weights(frames.phase.to_numpy())
     # Deterministic 1 Hz sample from training patients only. No val/test statistics.
@@ -167,7 +176,14 @@ def normalization(c):
             'class_weights':weights.tolist(),'class_counts':np.bincount(frames.phase,minlength=7).tolist(),
             'train_videos':ids(c,'train'),'normalization_sampling_fps':1,'normalization_frames':len(sample),
             'weight_formula':'median(training frame counts)/training phase count','created_at':now()}
-    atomic_json(processed/'training_statistics.json',result)
+    if stats_path.exists():
+        # Adopt an earlier snapshot only after proving its numeric content agrees.
+        old=json.loads(stats_path.read_text())
+        assert {k:v for k,v in old.items() if k!='created_at'}=={k:v for k,v in result.items() if k!='created_at'}, 'Training statistics changed; do not invalidate existing encoders'
+        result=old
+    else:
+        atomic_json(stats_path,result)
+    atomic_json(inputs_path,signature)
     return result
 
 
