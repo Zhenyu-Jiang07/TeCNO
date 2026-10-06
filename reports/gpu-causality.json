@@ -1,0 +1,8 @@
+{
+  "time": "2026-10-07T01:54:44.545406+08:00",
+  "device": "NVIDIA GeForce RTX 5090",
+  "full_model": "2x9x64",
+  "future_perturbation_max_error": 0.0,
+  "prefix_max_error": 4.172325134277344e-07,
+  "future_gradient_nonzero": 0
+}

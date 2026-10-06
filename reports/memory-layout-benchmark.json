@@ -1,0 +1,19 @@
+{
+  "time": "2026-10-07T01:55:36.212593+08:00",
+  "results": [
+    {
+      "format": "contiguous",
+      "batch": 64,
+      "mean_step_seconds": 0.09275098765889804,
+      "images_per_second": 690.0196064258317
+    },
+    {
+      "format": "channels_last",
+      "batch": 64,
+      "mean_step_seconds": 0.0946732391603291,
+      "images_per_second": 676.0094042162856
+    }
+  ],
+  "precision": "FP32 TF32 disabled",
+  "data": "synthetic throughput test only"
+}

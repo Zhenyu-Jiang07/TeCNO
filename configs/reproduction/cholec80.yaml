@@ -1,0 +1,34 @@
+experiment: cholec80_multitask_5fps_seed2334
+seed: 2334
+raw_root: data/raw/cholec80
+processed_root: data/processed/cholec80_5fps
+features_root: features/cholec80_multitask_5fps_seed2334
+run_root: runs/cholec80_multitask_5fps_seed2334
+fps: 5
+source_fps: 25
+train_videos: [1, 40]
+val_videos: [41, 48]
+test_videos: [49, 80]
+input_size: 224
+storage_size: 250
+num_workers: 8
+cnn:
+  pretrained: true
+  batch_size: 64
+  max_epochs: 15
+  learning_rate: 0.0005
+  precision: 32-true
+  num_tasks: 2
+  task_weighting: learned_log_variance
+  monitor: val_acc_video
+tcn:
+  batch_size: 1
+  max_epochs: 25
+  learning_rate: 0.0005
+  precision: 32-true
+  mstcn_stages: 2
+  mstcn_layers: 9
+  mstcn_f_maps: 64
+  mstcn_f_dim: 2048
+  mstcn_causal_conv: true
+  monitor: val_acc_video

@@ -64,3 +64,14 @@ lightning_logs/
 eval/media*
 eval
 venv
+
+# Reproduction runtime artifacts (never commit patient video or model weights)
+/data/
+/features/
+/checkpoints/
+/runs/
+/sources/
+/reports/*.png
+/reports/*.pdf
+/reports/*.npz
+*.part

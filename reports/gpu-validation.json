@@ -1,0 +1,41 @@
+{
+  "time": "2026-10-07T01:43:09.845661+08:00",
+  "python": "3.11.17 (main, Oct  6 2026, 13:34:32) [GCC 15.3.0]",
+  "torch": "2.7.1+cu128",
+  "torchvision": "0.22.1+cu128",
+  "lightning": "2.5.2",
+  "cuda_runtime": "12.8",
+  "cudnn": 90701,
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "capability": [
+    12,
+    0
+  ],
+  "architectures": [
+    "sm_75",
+    "sm_80",
+    "sm_86",
+    "sm_90",
+    "sm_100",
+    "sm_120",
+    "compute_120"
+  ],
+  "cnn": {
+    "features": [
+      4,
+      2048
+    ],
+    "loss": 2.862415313720703,
+    "forward_backward_seconds": 0.7779446560889482
+  },
+  "tcn": {
+    "outputs": [
+      2,
+      1,
+      7,
+      2000
+    ],
+    "loss": 2.235743522644043
+  },
+  "max_allocated_MB": 494.15283203125
+}

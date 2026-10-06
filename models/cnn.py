@@ -11,7 +11,9 @@ from datetime import datetime
 class TwoHeadResNet50Model(nn.Module):
     def __init__(self, hparams):
         super(TwoHeadResNet50Model, self).__init__()
-        self.model = models.resnet50(pretrained=hparams.pretrained)
+        # V1 is the ImageNet checkpoint used by the legacy pretrained=True API.
+        weights = models.ResNet50_Weights.IMAGENET1K_V1 if hparams.pretrained else None
+        self.model = models.resnet50(weights=weights)
         # replace final layer with number of labels
         self.model.fc = Identity()
         self.fc_phase = nn.Linear(2048, hparams.out_features)
