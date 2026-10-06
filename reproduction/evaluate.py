@@ -37,6 +37,9 @@ def evaluate(c,checkpoint,split='test',limit=None):
     out=Path(c['run_root'])/'evaluation'/split;out.mkdir(parents=True,exist_ok=True)
     signature={'checkpoint_sha256':digest(checkpoint),'split':split,'videos':ids(c,split),
                'features_provenance_sha256':digest(Path(c['features_root'])/'provenance.json'),'limit':limit}
+    feature_snapshot=Path(checkpoint).parent.parent/'features-provenance.json'
+    assert feature_snapshot.exists(),'Missing temporal-model training feature provenance'
+    assert digest(feature_snapshot)==signature['features_provenance_sha256'], 'TCN inference features differ from its training encoder'
     if (out/'results.json').exists():
         prior=json.loads((out/'results.json').read_text())
         assert prior['signature']==signature,'Refusing to overwrite evaluation of another checkpoint'

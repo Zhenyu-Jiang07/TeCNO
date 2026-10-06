@@ -112,6 +112,8 @@ python -m reproduction.evaluate --split test
 
 训练统计通过 `training_statistics.inputs.json` 绑定训练 manifest 校验值；重复准备相同数据时直接复用，不更新时间戳或破坏特征缓存。已对本次完整训练数据重新核算，确认统计内容及 SHA256 完全未变，随后缓存复用检查通过。每个训练目录也保存使用的统计副本，提取特征时必须与编码器训练统计一致。
 
+TCN 训练目录同时保存 `features-provenance.json`，绑定实际使用的编码器 checkpoint SHA256；恢复及评测时检查特征来源一致，避免将另一编码器的缓存误用于已训练的时序模型。
+
 只读状态查询：`/data/users/jiangzhenyu/miniconda3/envs/tecno/bin/python scripts/status.py`。
 
 ## 待完成

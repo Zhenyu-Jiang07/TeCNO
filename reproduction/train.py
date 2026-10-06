@@ -83,6 +83,11 @@ def run(c,stage,resume=True,smoke=False,max_epochs=None):
     else:
         train=VideoDataset(c,'train',limit=256 if smoke else None)
         val=VideoDataset(c,'val',limit=256 if smoke else None)
+        feature_source=Path(c['features_root'])/'provenance.json'
+        feature_snapshot=out/'features-provenance.json'
+        if feature_snapshot.exists():
+            assert json.loads(feature_snapshot.read_text())==json.loads(feature_source.read_text()), 'Encoder features changed in an existing TCN run'
+        shutil.copy2(feature_source,feature_snapshot)
     workers=0 if smoke else c['num_workers']
     kwargs={'batch_size':4 if smoke and stage=='cnn' else c[stage]['batch_size'],
             'num_workers':workers,'pin_memory':True,'persistent_workers':False}
