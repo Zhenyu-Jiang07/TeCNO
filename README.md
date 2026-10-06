@@ -1,3 +1,5 @@
+> **本机 RTX 5090 复现入口：** 环境、协议差异、执行命令和当前状态见 [REPRODUCTION.md](REPRODUCTION.md)。现代环境使用 `python -m reproduction.train ...`；下方作者的旧 Lightning 命令保留作历史参考。
+
 # Table of Contents
 <img src="assets/tecno_logo.png"
      alt="logo tecno"
