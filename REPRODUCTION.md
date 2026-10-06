@@ -8,6 +8,7 @@
 - 已核对论文、原始实现及作者 issues；独立 `tecno` 环境已创建，依赖检查通过。
 - RTX 5090 上 ResNet50 和 2×9 层 TeCNO 前向、反向通过；CNN batch=64 实测峰值约 5.5 GiB。
 - 完整 TCN 的 GPU 因果性测试也通过：未来扰动对应的历史输出最大误差 0，未来梯度非零项 0，截断前缀误差约 4.2e-7；见 `reports/gpu-causality.json`。
+- 正式加载配置（真实训练病例 36，batch 64，workers 8）连续 18 步更新通过，约 686 帧/秒，峰值 5.5 GiB；最长 29,966 时间点的合成 TCN 资源测试也通过，峰值约 0.6 GiB。两者都不作为训练成绩；见 `reports/real-loader-gpu-check.json`、`reports/full-length-tcn-gpu-check.json`。
 - 官方公开数据正在分块下载；80 个病例的阶段、器械标注已取得并核对零起始连续帧号。
 - 5 项关键单元测试通过（包含因果性、未来梯度、非因果对照、指标和 logits CE）。
 - 真实病例小流程已通过：36 号训练、41 号验证；CNN 和 TCN 各跨两个独立进程保存/恢复模型及优化器；2048 维特征缓存复用通过；验证集评测和时间轴生成通过。证据：`runs/smoke-real/completed.json`。这些是极小子集测试，分数不作为实验成绩。

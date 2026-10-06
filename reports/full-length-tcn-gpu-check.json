@@ -1,0 +1,14 @@
+{
+  "time": "2026-10-07T02:17:00.430046+08:00",
+  "scope": "synthetic worst-length resource check, not a model performance result",
+  "frames": 29966,
+  "outputs": [
+    2,
+    1,
+    7,
+    29966
+  ],
+  "seconds": 0.324531938880682,
+  "peak_GPU_GiB": 0.5844430923461914,
+  "loss": 2.0432851314544678
+}
