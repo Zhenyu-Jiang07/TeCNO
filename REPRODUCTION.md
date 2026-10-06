@@ -102,6 +102,7 @@ python -m reproduction.train cnn
 python -m reproduction.extract
 python -m reproduction.train tcn
 python -m reproduction.evaluate --split test
+python -m reproduction.audit_results
 ```
 
 实际后台入口：`bash scripts/start_pipeline.sh`。状态：`logs/pipeline-status.json`，总日志 `logs/pipeline.log`，阶段日志 `logs/formal-{statistics,cnn,features,tcn,evaluation}.log`。可重复运行入口：正在运行时不会另开第二个流程，重启后接管仍存活的本项目子进程，并检查已有完成标志和 last checkpoint。监督器每 10 秒检查，约每分钟写一次总日志。下载及解压可恢复；普通阶段失败最多重试三次，持续失败会保存 `failed` 和错误位置，不假报完成。外部 GPU 占用时等待。只有真实小流程通过、01–48 全部预处理完成后才允许正式 CNN 训练；全包 SHA256、全部病例准备和 CNN 完成后才提取正式特征；测试评测排在两次训练和全特征缓存完成之后。下载最多 32 条 HTTP range 连接，预处理最多 3 个视频进程；不调整系统服务或其他人的作业。
