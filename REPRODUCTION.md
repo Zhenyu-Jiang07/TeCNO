@@ -108,6 +108,8 @@ python -m reproduction.evaluate --split test
 
 训练默认从同一运行目录的 `last.ckpt` 恢复，保存模型、优化器、epoch/global step 和 RNG 状态；恢复边界为已完成的 epoch。改变配置必须换运行目录，不能静默混入旧实验。每次 GPU 作业前检查 compute 进程；发现其他作业则等待，不终止它们。种子、数值精度为 32-bit、TF32 关闭、确定性 cuDNN 设置均有记录。
 
+只读状态查询：`/data/users/jiangzhenyu/miniconda3/envs/tecno/bin/python scripts/status.py`。
+
 ## 待完成
 
 1. 已完成全数据下载、逐病例预处理及训练统计，并核对视频帧数和标注尾部。
