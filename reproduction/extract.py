@@ -26,6 +26,9 @@ def extract(c,checkpoint,videos=None,batch_size=128,limit=None):
     require_free_gpu();seed_all(c['seed'])
     videos=videos or list(range(1,81));out=Path(c['features_root']);out.mkdir(parents=True,exist_ok=True)
     ckpt_hash=digest(checkpoint)
+    stats_snapshot=Path(checkpoint).parent.parent/'training_statistics.json'
+    assert stats_snapshot.exists(),'Missing encoder training-statistics snapshot'
+    assert digest(stats_snapshot)==digest(Path(c['processed_root'])/'training_statistics.json'), 'Normalization changed since encoder training'
     provenance={'encoder_checkpoint':str(Path(checkpoint).resolve()),'encoder_sha256':ckpt_hash,
                 'fps':c['fps'],'dimension':2048,'dtype':'float32','encoder_train_videos':ids(c,'train'),
                 'encoder_validation_videos':ids(c,'val'),'statistics_sha256':digest(Path(c['processed_root'])/'training_statistics.json'),
