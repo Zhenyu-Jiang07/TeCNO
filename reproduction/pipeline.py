@@ -45,6 +45,10 @@ def main():
     fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     (ROOT/'logs/pipeline.pid').write_text(str(os.getpid())+'\n')
     c=config('configs/reproduction/cholec80.yaml');run=Path(c['run_root'])
+    for stage in ['cnn','tcn']:
+        previous_config=run/stage/'config.json'
+        if previous_config.exists():
+            assert json.loads(previous_config.read_text())==c, 'Existing run configuration differs; choose a new run directory'
     py=sys.executable;prep_jobs={};attempts={};active=None;active_stage=None
     stages=[('cnn',[py,'-u','-m','reproduction.train','cnn']),
             ('features',[py,'-u','-m','reproduction.extract']),
@@ -175,7 +179,10 @@ def write_result(c):
 测试视频 49 的真实/预测时间轴：`{run}/evaluation/test/video49-timeline.png`。
 每视频预测和混淆矩阵保存在同一评测目录；训练配置、日志及 checkpoint 分别位于 `{run}/cnn` 和 `{run}/tcn`。
 '''
-    (ROOT/'reports/RESULTS.md').write_text(text)
+    (run/'evaluation/test/summary.md').write_text(text)
+    # Preserve reviewed analysis when restarting an already completed run.
+    report=ROOT/'reports/RESULTS.md'
+    if not report.exists():report.write_text(text)
 
 
 if __name__=='__main__':

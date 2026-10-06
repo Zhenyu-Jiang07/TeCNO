@@ -1,0 +1,20 @@
+{
+  "time": "2026-10-07T05:36:11.132213+08:00",
+  "status": "passed",
+  "checkpoint_and_reviewed_report_hashes_and_mtimes_unchanged": true,
+  "paths": {
+    "reports/RESULTS.md": {
+      "sha256": "b572e2d06ac1048c5186222c7890078abd435132074c07d28b07d2d4c00abbfd",
+      "mtime_ns": 1791322409898637543
+    },
+    "runs/cholec80_multitask_5fps_seed2334/cnn/checkpoints/last.ckpt": {
+      "sha256": "5701c12218fea786fe95fb3badef3d9c948b264dc196a34d0e45e5360ad20e2c",
+      "mtime_ns": 1791321416021646182
+    },
+    "runs/cholec80_multitask_5fps_seed2334/tcn/checkpoints/last.ckpt": {
+      "sha256": "1533861cb5acf1874acf1cf5bfc6f50b17f7585a2cb19fd2489e641bf1496938",
+      "mtime_ns": 1791321951609087623
+    }
+  },
+  "pipeline_status": "completed"
+}

@@ -98,6 +98,14 @@ def audit(c):
     fig.savefig(ROOT/'reports/validation-curves.pdf');plt.close(fig)
     video_table=pd.DataFrame(video_rows);video_table.to_csv(ROOT/'reports/test-per-video.csv',index=False)
     phase_table.to_csv(ROOT/'reports/test-per-phase.csv',index=False)
+    # Diagnostic selection after evaluation; never used to select a checkpoint.
+    from .evaluate import timeline
+    worst=int(video_table.loc[video_table.tecno_accuracy.idxmin(),'video'])
+    example=pd.read_csv(run/'evaluation/test'/f'video{worst:02d}.csv')
+    timeline(example.frame.to_numpy(),example.ground_truth.to_numpy(),
+             example.cnn_prediction.to_numpy(),example.tecno_prediction.to_numpy(),
+             run/'evaluation/test'/f'video{worst:02d}-error-timeline',
+             title=f'Cholec80 video{worst:02d} (test, 5 fps; error analysis)')
     output={'status':'completed_run_independently_verified','time':now(),'seed':c['seed'],
             'feature_videos':80,'feature_frames':feature_rows,'test_videos':32,'test_frames':test_frames,
             'ground_truth_verified_against_original_annotations':True,'sklearn_recomputed_metrics':independent,

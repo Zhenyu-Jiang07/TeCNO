@@ -1,0 +1,47 @@
+{
+  "status": "completed_run_independently_verified",
+  "time": "2026-10-07T05:27:03.023725+08:00",
+  "seed": 2334,
+  "feature_videos": 80,
+  "feature_frames": 922570,
+  "test_videos": 32,
+  "test_frames": 383817,
+  "ground_truth_verified_against_original_annotations": true,
+  "sklearn_recomputed_metrics": {
+    "cnn": {
+      "accuracy_video_mean": 0.8057843474244386,
+      "accuracy_frame_pooled": 0.7906867074673607,
+      "precision_phase_then_video_macro": 0.693651856390893,
+      "recall_phase_then_video_macro": 0.763918285025033
+    },
+    "tecno": {
+      "accuracy_video_mean": 0.8762332279277154,
+      "accuracy_frame_pooled": 0.8609728073535045,
+      "precision_phase_then_video_macro": 0.8222684839102453,
+      "recall_phase_then_video_macro": 0.8486127540584849
+    }
+  },
+  "checkpoints": {
+    "cnn": {
+      "epochs": 15,
+      "global_step": 101160,
+      "best_checkpoint": "/data/users/jiangzhenyu/projects/tecno-reproduction/runs/cholec80_multitask_5fps_seed2334/cnn/checkpoints/epoch=03-val=0.83922.ckpt",
+      "best_sha256": "1698a66bc64f2921baa8bcddaa61ec43e98168df6d26310dc72df24243255163",
+      "best_epoch_1based": 4
+    },
+    "tcn": {
+      "epochs": 25,
+      "global_step": 1000,
+      "best_checkpoint": "/data/users/jiangzhenyu/projects/tecno-reproduction/runs/cholec80_multitask_5fps_seed2334/tcn/checkpoints/epoch=05-val=0.90759.ckpt",
+      "best_sha256": "b69c233dacf2eb3b3a9544236028063c709f848c123306a4e44f54ca4553984b",
+      "best_epoch_1based": 6
+    }
+  },
+  "total_transitions": {
+    "gt_transitions": 187,
+    "cnn_transitions": 30983,
+    "tecno_transitions": 3246
+  },
+  "accuracy_difference_vs_paper_percentage_points": -0.9366772072284646,
+  "scope": "single seed, strict 5fps frames, 40/8/32 split; not a five-run statistical replication"
+}

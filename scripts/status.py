@@ -28,6 +28,13 @@ if stage in ('cnn','tcn'):
             parts.append(f"val_latest={history[-1]['validation']['accuracy_video_mean']*100:.2f}%")
             parts.append(f"val_best={max(x['validation']['accuracy_video_mean'] for x in history)*100:.2f}%")
 if stage=='features':parts.append(f"features={len(list((root/c['features_root']).glob('video*.json')))}/80")
+if s['status']=='completed':
+    result_path=root/c['run_root']/'evaluation/test/results.json'
+    if result_path.exists():
+        metrics=json.loads(result_path.read_text())['tecno']
+        parts.append(f"test_acc={100*metrics['accuracy_video_mean']:.2f}%")
+        parts.append(f"test_precision={100*metrics['precision_phase_then_video_macro']:.2f}%")
+        parts.append(f"test_recall={100*metrics['recall_phase_then_video_macro']:.2f}%")
 if s.get('error'):parts.append(s['error'])
 parts.append(f"retries={s.get('attempts',{})}")
 print(' | '.join(parts))
