@@ -1,0 +1,9 @@
+{
+  "time": "2026-10-07T02:31:46.335029+08:00",
+  "weights": "torchvision.ResNet50_Weights.IMAGENET1K_V1",
+  "url": "https://download.pytorch.org/models/resnet50-0676ba61.pth",
+  "sha256": "0676ba61b6795bbe1773cffd859882e5e297624d384b6993f7c9e683e722fb8a",
+  "bytes": 102530333,
+  "used_cache": "/data/users/jiangzhenyu/.cache/torch/hub/checkpoints/resnet50-0676ba61.pth",
+  "project_copy": "/data/users/jiangzhenyu/projects/tecno-reproduction/data/pretrained/hub/checkpoints/resnet50-0676ba61.pth"
+}

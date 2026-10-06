@@ -78,6 +78,7 @@ GPU 验证：`reports/gpu-validation.json`；驱动：`reports/nvidia-smi.txt`�
 - `data/raw/cholec80.zip` 下载中是稀疏文件，不能按表面文件长度判断完成；每 32 MiB 分块有 SHA256 marker，完成后另写全包 SHA256。
 - 解压时逐文件 ZIP CRC32 和 SHA256；`*.verified.json` 保存记录。
 - `data/processed/cholec80_5fps/frames/`：250×250 PNG；`manifests/`：原帧号与标签；`audit/`：逐视频解码对齐审计；`training_statistics.json`：训练统计。
+- `data/pretrained/hub/checkpoints/`：ImageNet ResNet50 V1 预训练权重副本，来源及 SHA256 在 `reports/pretrained-weights.json`。本次首次加载使用了 torchvision 的用户缓存，已将同一文件校验后保存到项目；后续后台入口设置项目内 `TORCH_HOME`，不依赖共享缓存。
 - `features/cholec80_multitask_5fps_seed2334/`：每视频浮点 2048 维特征、原帧号、标签、CNN logits；provenance 绑定编码器 checkpoint SHA256，匹配时重用缓存。
 - `runs/cholec80_multitask_5fps_seed2334/{cnn,tcn}/`：完整配置、每 epoch 记录、CSV/TensorBoard、best 和 last checkpoints；`evaluation/test/`：最终结果、逐帧 CSV、PNG/PDF 时间轴。
 - 所有数据、特征、checkpoint、日志、下载资料均已加入 `.gitignore`。
@@ -89,6 +90,7 @@ GPU 验证：`reports/gpu-validation.json`；驱动：`reports/nvidia-smi.txt`�
 ```bash
 cd /data/users/jiangzhenyu/projects/tecno-reproduction
 export PATH=/data/users/jiangzhenyu/miniconda3/envs/tecno/bin:$PATH
+export TORCH_HOME="$PWD/data/pretrained"
 python scripts/download_cholec80.py
 python -m reproduction.prepare --unpack --statistics
 python -m pytest -q tests/test_reproduction.py
