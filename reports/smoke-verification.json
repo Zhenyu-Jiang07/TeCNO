@@ -1,0 +1,16 @@
+{
+  "verified_at": "2026-10-07T01:58:14.409050+08:00",
+  "cnn_optimizer_steps": [
+    4
+  ],
+  "tcn_optimizer_steps": [
+    2
+  ],
+  "cnn_global_step": 4,
+  "tcn_global_step": 2,
+  "cnn_epoch": 1,
+  "tcn_epoch": 1,
+  "feature_dimension": 2048,
+  "test_videos_used": false,
+  "completion_file": "runs/smoke-real/completed.json"
+}

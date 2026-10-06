@@ -67,7 +67,8 @@ def run(c,stage,resume=True,smoke=False,max_epochs=None):
     for filename in ['environment-lock.yml','pip-freeze.txt','nvidia-smi.txt']:
         if (ROOT/'reports'/filename).exists():shutil.copy2(ROOT/'reports'/filename,snapshot/filename)
     (out/'source.diff').write_text(subprocess.check_output(['git','diff'],cwd=ROOT,text=True))
-    (out/'original_commit.txt').write_text(subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True))
+    (out/'source_commit.txt').write_text(subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True))
+    (out/'upstream_commit.txt').write_text('0c4313f3765348f5e42a8b7e9183639aea0bca4e\n')
     stats=json.loads((Path(c['processed_root'])/'training_statistics.json').read_text())
     assert stats['train_videos']==ids(c,'train')
     if stage=='cnn':
