@@ -38,6 +38,8 @@
 
 编码器只能在 01–40 训练、41–48 选 checkpoint。冻结最佳编码器后提取全部病例特征；提取时不更新 BatchNorm，不随机增广，不计算测试表现。TCN 只加载 train/val 特征；最终模型固定后才评测 49–80。测试阶段不选择 stage/checkpoint、阈值或平滑参数。
 
+原仓库 `test_extract=True` 会把 `vids_for_test` 改成 01–80，因而其 `test_acc_test` 包含训练和验证病例，不能视作严格测试成绩。本流程只把全体病例提取当作推理缓存步骤（batch 128、FP32、2048 维），CNN 与 TCN 的测试指标均在最后固定 49–80 上计算。
+
 权重审计：训练病例 5 fps 标注统计得到约 `[1.922, 0.196, 0.985, 0.299, 1.943, 1.000, 2.197]`，与仓库常量不同（Preparation、GallbladderDissection 分别相差约 17%、20%）。仓库常量也不完全等于当前官方数据的 01–48 或 01–80 全帧统计，因此不能断言其来源或断言原作者使用了测试分布。本次只采用解码后训练 manifest 计算出的权重；对其他范围的统计仅用于查明原常量来源，不进入训练。证据：`reports/training-weight-audit.json`、`reports/legacy-weight-origin-audit.json`。
 
 损失归一化采用作者调用的 PyTorch 加权交叉熵 `reduction='mean'` 语义，即除以当前样本目标类别权重的总和；论文公式写作 `1/T`，未解释这一归一化差别。本次保留作者 API 的归一化，仅修正重复 softmax。TCN 对两 stage 的损失取算术平均。
