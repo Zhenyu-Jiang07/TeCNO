@@ -36,6 +36,8 @@
 
 编码器只能在 01–40 训练、41–48 选 checkpoint。冻结最佳编码器后提取全部病例特征；提取时不更新 BatchNorm，不随机增广，不计算测试表现。TCN 只加载 train/val 特征；最终模型固定后才评测 49–80。测试阶段不选择 stage/checkpoint、阈值或平滑参数。
 
+权重审计：训练病例 5 fps 标注统计得到约 `[1.922, 0.196, 0.985, 0.299, 1.943, 1.000, 2.197]`，与仓库常量不同（Preparation、GallbladderDissection 分别相差约 17%、20%）。仓库常量也不完全等于当前官方数据的 01–48 或 01–80 全帧统计，因此不能断言其来源或断言原作者使用了测试分布。本次只采用解码后训练 manifest 计算出的权重；对其他范围的统计仅用于查明原常量来源，不进入训练。证据：`reports/training-weight-audit.json`、`reports/legacy-weight-origin-audit.json`。
+
 ## 评测与比较边界
 
 最后一个 TCN stage 的 argmax；严格 5 fps 帧评测，不提供边界容忍区间，不使用未来帧或离线后处理。保存每视频混淆矩阵、逐帧预测 CSV、宏观指标和首个测试视频时间轴。
