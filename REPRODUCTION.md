@@ -94,6 +94,7 @@ export TORCH_HOME="$PWD/data/pretrained"
 python scripts/download_cholec80.py
 python -m reproduction.prepare --unpack --statistics
 python -m pytest -q tests/test_reproduction.py
+python -m reproduction.smoke
 python -m reproduction.train cnn
 python -m reproduction.extract
 python -m reproduction.train tcn

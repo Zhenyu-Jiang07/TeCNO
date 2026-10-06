@@ -29,7 +29,6 @@ def wait_archive_member(info, archive, wait):
 
 def unpack(c, wait=False):
     archive = ROOT / 'data/raw/cholec80.zip'
-    index = json.loads((ROOT / 'sources/cholec80-archive-index.json').read_text())
     size = 74916858781
     last = (size-1) // (32 * 1024**2)
     while not (archive.with_suffix('.chunks') / f'{last:05d}.json').exists():
@@ -46,6 +45,7 @@ def unpack(c, wait=False):
             if x.filename.endswith('.mp4'): return (2,x.header_offset)
             return (3,x.header_offset)
         members = sorted(z.infolist(), key=priority)
+        member_count=len(members)
         pending = [x for x in members if not x.is_dir()]
         while pending:
             remaining=[]
@@ -75,7 +75,7 @@ def unpack(c, wait=False):
                 raise RuntimeError(f'{len(remaining)} archive members are still downloading')
             pending=remaining
             if pending:time.sleep(10)
-    atomic_json(root/'complete.json', {'members': len(index), 'completed_at': now()})
+    atomic_json(root/'complete.json', {'members': member_count, 'completed_at': now()})
 
 
 def make_video(c, video):
@@ -117,6 +117,7 @@ def make_video(c, video):
     assert (tool_age <= 25).all(), (vname, int(tool_age.max()))
     output.mkdir(parents=True,exist_ok=True)
     logpath = ROOT/'logs'/f'preprocess-{vname}.log'
+    logpath.parent.mkdir(parents=True,exist_ok=True)
     with open(logpath,'a') as log:
         subprocess.run([ffmpeg,'-nostdin','-hide_banner','-loglevel','warning','-threads','2',
                         '-i',str(src),'-vf',f"select=not(mod(n\\,{stride}))*lt(n\\,{usable}),scale={c['storage_size']}:{c['storage_size']}",

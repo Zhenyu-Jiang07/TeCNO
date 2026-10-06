@@ -30,6 +30,7 @@ class RecordedProcess:
 
 
 def background(command,logname):
+    (ROOT/'logs').mkdir(parents=True,exist_ok=True)
     with open(ROOT/'logs'/f'{logname}.log','ab',buffering=0) as log:
         p=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.DEVNULL,stdout=log,stderr=log,
                            start_new_session=True)
@@ -39,6 +40,7 @@ def background(command,logname):
 
 def main():
     os.chdir(ROOT)
+    (ROOT/'logs').mkdir(parents=True,exist_ok=True)
     lock=open(ROOT/'logs/pipeline.lock','w')
     fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     (ROOT/'logs/pipeline.pid').write_text(str(os.getpid())+'\n')
@@ -97,6 +99,16 @@ def main():
                 if v in [36,41] and smoke_pid.exists() and alive(int(smoke_pid.read_text())):continue
                 prep_jobs[v]=background([py,'-u','-m','reproduction.prepare','--videos',str(v),'--workers','1'],f'prepare-video{v:02d}')
         prepared=[v for v in range(1,81) if (Path(c['processed_root'])/'audit'/f'video{v:02d}.json').exists()]
+        smoke_done=ROOT/'runs/smoke-real/completed.json'
+        smoke_pidfile=ROOT/'logs/smoke-real.pid'
+        smoke_running=smoke_pidfile.exists() and alive(int(smoke_pidfile.read_text()))
+        if not smoke_done.exists() and not smoke_running and all(v in prepared for v in [36,41]):
+            occupied=subprocess.check_output(['nvidia-smi','--query-compute-apps=pid',
+                        '--format=csv,noheader'],text=True).strip()
+            if not occupied:
+                attempts['smoke']=attempts.get('smoke',0)+1
+                if attempts['smoke']>3:raise RuntimeError('Real-data smoke repeatedly failed; inspect logs/smoke-real.log')
+                background([py,'-u','-m','reproduction.smoke'],'smoke-real')
         chunks=len(list((ROOT/'data/raw/cholec80.chunks').glob('[0-9]*.json')))
         if active is not None and active.poll() is not None:
             code=active.returncode

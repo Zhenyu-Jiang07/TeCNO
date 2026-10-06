@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import time
 import urllib.request
+import zipfile
 
 URL = "https://s3.unistra.fr/camma_public/datasets/cholec80/cholec80.zip"
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,15 +68,23 @@ def main():
     started = time.monotonic()
     count = 0
     # Fetch annotations + central directory first so preparation can overlap transfer.
-    order = list(range(max(0, total-4), total))
     index_path = ROOT / 'sources/cholec80-archive-index.json'
-    if index_path.exists():
-        index = {x['name']: x for x in json.loads(index_path.read_text())}
-        # First real-data smoke cases, then training/validation, then test cases.
-        for video in [36,41] + list(range(1,81)):
-            item = index[f'videos/video{video:02d}.mp4']
-            order.extend(range(item['offset']//CHUNK,
-                               (item['offset']+item['compressed']+256)//CHUNK+1))
+    tail = list(range(max(0, total-4), total))
+    if not index_path.exists():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+            list(pool.map(fetch,tail))
+        with zipfile.ZipFile(DEST) as archive:
+            entries=[{'name':i.filename,'size':i.file_size,'compressed':i.compress_size,
+                      'offset':i.header_offset,'crc':i.CRC} for i in archive.infolist()]
+        index_path.parent.mkdir(parents=True,exist_ok=True)
+        index_path.write_text(json.dumps(entries,indent=2))
+    order = list(tail)
+    index = {x['name']: x for x in json.loads(index_path.read_text())}
+    # First real-data smoke cases, then training/validation, then test cases.
+    for video in [36,41] + list(range(1,81)):
+        item = index[f'videos/video{video:02d}.mp4']
+        order.extend(range(item['offset']//CHUNK,
+                           (item['offset']+item['compressed']+256)//CHUNK+1))
     order = list(dict.fromkeys(order + list(range(total))))
     with concurrent.futures.ThreadPoolExecutor(max_workers=32) as pool:
         for future in concurrent.futures.as_completed([pool.submit(fetch, i) for i in order]):

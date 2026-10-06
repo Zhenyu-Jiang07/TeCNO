@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
+mkdir -p logs
 export TORCH_HOME="$PWD/data/pretrained"
 /data/users/jiangzhenyu/miniconda3/envs/tecno/bin/python - <<'PY'
 import pathlib,subprocess
